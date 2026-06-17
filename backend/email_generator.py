@@ -1,6 +1,5 @@
 import os
 from groq import Groq
-from backend.langfuse_config import langfuse
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -45,46 +44,15 @@ AI Recruitment Solutions
 Write a professional email.
 """
 
-    trace = langfuse.trace(
-        name="Email Generation"
-    )
-
-    generation = trace.generation(
-        name="Professional HR Email",
+    response = client.chat.completions.create(
         model="llama-3.3-70b-versatile",
-        input=prompt
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        temperature=0.3
     )
 
-    try:
-
-        response = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            temperature=0.3
-        )
-
-        output = response.choices[0].message.content
-
-        generation.update(
-            output=output
-        )
-
-        langfuse.flush()
-
-        return output
-
-    except Exception as e:
-
-        generation.end(
-            level="ERROR",
-            status_message=str(e)
-        )
-
-        langfuse.flush()
-
-        raise e
+    return response.choices[0].message.content

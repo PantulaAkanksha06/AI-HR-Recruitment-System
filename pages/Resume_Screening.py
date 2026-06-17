@@ -4,7 +4,7 @@ from typing import Optional
 
 import pandas as pd
 import streamlit as st
-from backend.langfuse_config import langfuse
+
 
 from backend.qdrant_manager import (
     create_collection,
@@ -244,9 +244,7 @@ def analyze_candidate(
     uploaded_file,
     job_description,
 ):
-    langfuse.trace(
-        name=f"Candidate Processing - {uploaded_file.name}"
-    )
+    
 
     resume_text = extract_resume_text(
         uploaded_file
@@ -421,7 +419,7 @@ def analyze_candidate(
 
     
 
-    langfuse.flush()
+    
 
     st.success(
         "✅ Candidate stored successfully."
