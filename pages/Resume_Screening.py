@@ -57,8 +57,10 @@ SHORTLIST_THRESHOLD = 70
 
 
 def get_db_connection():
-    return sqlite3.connect(DB_PATH)
 
+    os.makedirs("database", exist_ok=True)
+
+    return sqlite3.connect(DB_PATH)
 
 def create_database():
 
