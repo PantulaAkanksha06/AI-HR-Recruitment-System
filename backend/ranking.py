@@ -1,5 +1,4 @@
 from groq import Groq
-from backend.langfuse_config import langfuse
 import time
 from dotenv import load_dotenv
 import time
@@ -27,57 +26,24 @@ def generate_response(
     trace_name: str = "AI HR Recruitment"
 ) -> str:
 
-    trace = langfuse.trace(
-        name=trace_name
-    )
-
-    generation = trace.generation(
-        name="Groq LLM Call",
+    response = client.chat.completions.create(
         model=MODEL_NAME,
-        input=prompt
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+        temperature=0.2
     )
 
-    try:
-
-        response = client.chat.completions.create(
-            model=MODEL_NAME,
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            temperature=0.2
-        )
-
-        output = (
-            response
-            .choices[0]
-            .message
-            .content
-            .strip()
-        )
-
-        generation.update(
-        output=output
+    return (
+        response
+        .choices[0]
+        .message
+        .content
+        .strip()
     )
-    
-
-        langfuse.flush()
-
-        return output
-
-    except Exception as e:
-
-        generation.end(
-            level="ERROR",
-            status_message=str(e)
-        )
-
-        langfuse.flush()
-
-        raise e
-
 
 # ==========================================
 # Candidate Details
