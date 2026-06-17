@@ -1,0 +1,12 @@
+#pip install -r requirements.txt
+# to install the following:
+streamlit
+pandas
+plotly
+streamlit-aggrid
+python-docx
+pypdf
+sentence-transformers
+groq
+python-dotenv
+qdrant-client
